@@ -34,4 +34,29 @@ def csv_to_dict(filename):
             {"name": "Bob", "age": 25, "city": "Rosario"},
         ]
     """
-    pass  # Reemplazar con tu implementación
+    registros = []
+    with open(filename, "r", encoding="utf-8") as f:
+        lineas = f.readlines()
+
+        # Si el archivo está vacío o solo tiene header
+        if len(lineas) <= 1:
+            return []
+
+        # Obtener header y claves
+        header = [h.strip() for h in lineas[0].split(",")]
+
+        # Procesar cada fila
+        for linea in lineas[1:]:
+            valores = [v.strip() for v in linea.split(",")]
+            if not valores or len(valores) != len(header):
+                continue  # ignora filas mal formateadas
+
+            fila = {}
+            for clave, valor in zip(header, valores):
+                if clave == "age":
+                    fila[clave] = int(valor)
+                else:
+                    fila[clave] = valor
+            registros.append(fila)
+
+    return registros
